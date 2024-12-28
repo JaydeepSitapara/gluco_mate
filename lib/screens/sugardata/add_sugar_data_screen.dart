@@ -2,11 +2,12 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:gluco_mate/providers/patient_data_provider.dart';
-import 'package:gluco_mate/widgets/common_text_form_field.dart';
-import 'package:gluco_mate/widgets/condition_selection_drop_down.dart';
-import 'package:gluco_mate/widgets/custom_save_button.dart';
-import 'package:gluco_mate/widgets/date_picker.dart';
-import 'package:gluco_mate/widgets/time_picker.dart';
+import 'package:gluco_mate/utils/widgets/common_text_form_field.dart';
+import 'package:gluco_mate/utils/widgets/condition_selection_drop_down.dart';
+import 'package:gluco_mate/utils/widgets/custom_save_button.dart';
+import 'package:gluco_mate/utils/widgets/date_picker.dart';
+import 'package:gluco_mate/utils/widgets/time_picker.dart';
+
 import 'package:provider/provider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
