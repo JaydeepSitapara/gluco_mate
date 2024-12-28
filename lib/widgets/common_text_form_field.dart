@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CommonTextFormField extends StatelessWidget {
   final TextEditingController controller;
@@ -24,23 +25,23 @@ class CommonTextFormField extends StatelessWidget {
           obscureText: obscureText,
           keyboardType: keyboardType,
           textAlign: TextAlign.center,
-          style: const TextStyle(
-            fontSize: 45, // Bigger font for numbers
+          style:  TextStyle(
+            fontSize: 45.sp, // Bigger font for numbers
             fontWeight: FontWeight.bold,
             color: Colors.black38
           ),
           decoration: InputDecoration(
             hintText: hintText ?? '0.0', // Default hint value as 0.0
-            hintStyle: const TextStyle(
-              fontSize: 45, // Bigger hint text size
+            hintStyle:  TextStyle(
+              fontSize: 45.sp, // Bigger hint text size
               color: Colors.black26,
             ),
             border: InputBorder.none, // No default border
           ),
         ),
         Container(
-          height: 4, // Thicker underline
-          width: 120, // Wider underline
+          height: 4.h, // Thicker underline
+          width: 120.w, // Wider underline
           color: Colors.black12, // Underline color
         ),
       ],
