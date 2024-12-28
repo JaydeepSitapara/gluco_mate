@@ -17,11 +17,11 @@ class SaveButton extends StatelessWidget {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
-        borderRadius: BorderRadius.circular(12.dm), // Rounded corners
+        borderRadius: BorderRadius.circular(10.dm), // Rounded corners
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.4),
-            blurRadius: 15.dm,
+            blurRadius: 10.dm,
             offset: Offset(0, 5),
           ),
         ],
@@ -33,11 +33,10 @@ class SaveButton extends StatelessWidget {
           backgroundColor: Colors.transparent,
           //primary: Colors.transparent, // Make the button's background transparent to show the gradient
           padding: EdgeInsets.symmetric(
-            vertical: 12.h,
-            horizontal: 28.w,
+            vertical: 8.h,
           ),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12.dm), // Rounded corners
+            borderRadius: BorderRadius.circular(10.dm), // Rounded corners
           ),
 
         ),
@@ -45,7 +44,7 @@ class SaveButton extends StatelessWidget {
           'Save',
           style: TextStyle(
             fontSize: 22.sp,
-            fontWeight: FontWeight.w400,
+            fontWeight: FontWeight.w500,
             color: Colors.white, // Text color remains white
           ),
         ),

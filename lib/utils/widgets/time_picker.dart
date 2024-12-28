@@ -57,34 +57,31 @@ class _TimePickerWidgetState extends State<TimePickerWidget> {
     return GestureDetector(
       onTap: () => _selectTime(context),
       child: Container(
-        padding:  EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+        padding:  EdgeInsets.symmetric(horizontal: 14.w, vertical: 10.h),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12.dm),
+          borderRadius: BorderRadius.circular(10.dm),
           color: Colors.white,
           boxShadow: [
             BoxShadow(
               color: Colors.black38,
               offset: Offset(0, 4),
-              blurRadius: 8.dm,
+              blurRadius: 4.dm,
             ),
           ],
         ),
-        child: Padding(
-          padding: EdgeInsets.all(8.0.h),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                formattedTime,
-                style: TextStyle(
-                  fontSize: 18.sp,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.black38,
-                ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              formattedTime,
+              style: TextStyle(
+                fontSize: 16.sp,
+                fontWeight: FontWeight.w500,
+                color: Colors.black38,
               ),
-              const Icon(Icons.access_time, color: Colors.grey),
-            ],
-          ),
+            ),
+            const Icon(Icons.access_time, color: Colors.grey),
+          ],
         ),
       ),
     );

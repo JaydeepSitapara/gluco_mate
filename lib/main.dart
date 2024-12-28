@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   await DbHelper.dbHelper.initDB();
   runApp(
     Phoenix(

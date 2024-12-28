@@ -17,7 +17,7 @@ class _CustomDropdownState extends State<CustomDropdown> {
     return Center(
       child: Container(
         width: double.infinity,
-        padding:  EdgeInsets.symmetric(horizontal: 16.w),
+        padding:  EdgeInsets.symmetric(horizontal: 8.w),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(12.dm),
@@ -57,7 +57,7 @@ class _CustomDropdownState extends State<CustomDropdown> {
           // Adjust dropdown size// Set a maximum height for the dropdown
           alignment: Alignment.center,  // Center align the dropdown items
           // You can add custom padding for the dropdown items
-          padding: EdgeInsets.symmetric(vertical: 10.h),
+          padding: EdgeInsets.symmetric(vertical: 6.h),
         ),
       ),
     );

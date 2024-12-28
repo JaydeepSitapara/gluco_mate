@@ -19,7 +19,8 @@ class AddSugerDataScreen extends StatefulWidget {
 }
 
 class _AddSugerDataScreenState extends State<AddSugerDataScreen> {
-  final sugerLevelController = TextEditingController();
+  final sugarLevelController = TextEditingController();
+  final notesLevelController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -30,19 +31,19 @@ class _AddSugerDataScreenState extends State<AddSugerDataScreen> {
         titleSpacing: 0,
         leading: Icon(
           Icons.close,
-          size: 30.h,
+          size: 26.h,
         ),
         title: Text(
           'New Record',
-          style: TextStyle(fontSize: 22.sp),
+          style: TextStyle(fontSize: 20.sp),
         ),
       ),
       body: Consumer<PatientDataProvider>(
         builder: (context, patientDataProvider, child) {
           return Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: EdgeInsets.all(16.0.h),
             child: Column(
-              spacing: 10.0.h,
+              spacing: 5.0.h,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
@@ -56,9 +57,10 @@ class _AddSugerDataScreenState extends State<AddSugerDataScreen> {
                     Text(
                       'Condition',
                       style: TextStyle(
-                          fontSize: 16.sp,
-                          color: Colors.black26,
-                          fontWeight: FontWeight.bold),
+                        fontSize: 16.sp,
+                        color: Colors.black26,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     SizedBox(
                       width: 12.w,
@@ -68,16 +70,26 @@ class _AddSugerDataScreenState extends State<AddSugerDataScreen> {
                     ),
                   ],
                 ),
-                SizedBox(height: 18.h),
+
                 CustomDropdown(),
-                SizedBox(height: 30.h),
+                SizedBox(height: 10.h),
                 CommonTextFormField(
-                  controller: sugerLevelController,
+                  controller: sugarLevelController,
+                  labelText: 'Super Concentration',
+                  hintText: 'mmol/L',
+                ),
+                SizedBox(height: 5.h),
+                CommonTextFormField(
+                  controller: notesLevelController,
+                  maxLines: 4,
+                  labelText: 'Notes',
+                  hintText: 'notes',
                 ),
                 const Expanded(
                   child: SizedBox(),
                 ),
                 Row(
+
                   children: [
                     Expanded(
                       child: DatePickerWidget(
@@ -87,7 +99,7 @@ class _AddSugerDataScreenState extends State<AddSugerDataScreen> {
                         },
                       ),
                     ),
-                    SizedBox(width: 20.w),
+                    SizedBox(width: 10.w,),
                     Expanded(
                       child: TimePickerWidget(
                         onTimeSelected: (value) {
@@ -98,11 +110,12 @@ class _AddSugerDataScreenState extends State<AddSugerDataScreen> {
                     ),
                   ],
                 ),
-                SizedBox(height: 20.w),
+                SizedBox(height: 1.h),
                 SaveButton(
                   onPressed: () {
                     log('Condition : ${patientDataProvider.selectedCondition}');
-                    log('Suger Level : ${sugerLevelController.text.toString()}');
+                    log('Sugar Level : ${sugarLevelController.text.toString()}');
+                    log('Notes : ${notesLevelController.text.toString()}');
                     log('Date Time : ${patientDataProvider.selectedDate} -- ${patientDataProvider.selectedTime} ');
                   },
                 ),
