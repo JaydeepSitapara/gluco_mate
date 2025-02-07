@@ -1,24 +1,28 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:gluco_mate/models/suger_data_model.dart';
 import 'package:gluco_mate/providers/patient_data_provider.dart';
+import 'package:gluco_mate/utils/database/local_db_provider.dart';
+import 'package:gluco_mate/utils/injector.dart';
 import 'package:gluco_mate/utils/widgets/common_text_form_field.dart';
 import 'package:gluco_mate/utils/widgets/condition_selection_drop_down.dart';
 import 'package:gluco_mate/utils/widgets/custom_save_button.dart';
 import 'package:gluco_mate/utils/widgets/date_picker.dart';
+import 'package:gluco_mate/utils/widgets/show_toast.dart';
 import 'package:gluco_mate/utils/widgets/time_picker.dart';
 
 import 'package:provider/provider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class AddSugerDataScreen extends StatefulWidget {
-  AddSugerDataScreen({super.key});
+class AddSugarDataScreen extends StatefulWidget {
+  AddSugarDataScreen({super.key});
 
   @override
-  State<AddSugerDataScreen> createState() => _AddSugerDataScreenState();
+  State<AddSugarDataScreen> createState() => _AddSugarDataScreenState();
 }
 
-class _AddSugerDataScreenState extends State<AddSugerDataScreen> {
+class _AddSugarDataScreenState extends State<AddSugarDataScreen> {
   final sugarLevelController = TextEditingController();
   final notesLevelController = TextEditingController();
 
@@ -70,7 +74,6 @@ class _AddSugerDataScreenState extends State<AddSugerDataScreen> {
                     ),
                   ],
                 ),
-
                 CustomDropdown(),
                 SizedBox(height: 10.h),
                 CommonTextFormField(
@@ -84,12 +87,12 @@ class _AddSugerDataScreenState extends State<AddSugerDataScreen> {
                   maxLines: 4,
                   labelText: 'Notes',
                   hintText: 'notes',
+                  keyboardType: TextInputType.text,
                 ),
                 const Expanded(
                   child: SizedBox(),
                 ),
                 Row(
-
                   children: [
                     Expanded(
                       child: DatePickerWidget(
@@ -99,7 +102,9 @@ class _AddSugerDataScreenState extends State<AddSugerDataScreen> {
                         },
                       ),
                     ),
-                    SizedBox(width: 10.w,),
+                    SizedBox(
+                      width: 10.w,
+                    ),
                     Expanded(
                       child: TimePickerWidget(
                         onTimeSelected: (value) {
@@ -112,11 +117,37 @@ class _AddSugerDataScreenState extends State<AddSugerDataScreen> {
                 ),
                 SizedBox(height: 1.h),
                 SaveButton(
-                  onPressed: () {
-                    log('Condition : ${patientDataProvider.selectedCondition}');
-                    log('Sugar Level : ${sugarLevelController.text.toString()}');
-                    log('Notes : ${notesLevelController.text.toString()}');
-                    log('Date Time : ${patientDataProvider.selectedDate} -- ${patientDataProvider.selectedTime} ');
+                  onPressed: () async {
+
+                    if(sugarLevelController.text.isEmpty) {
+                      showSnackbar('Provider Sugar Concentration.');
+                    }else {
+                      log('Condition : ${patientDataProvider.selectedCondition}');
+                      log('Sugar Level : ${sugarLevelController.text.toString()}');
+                      log('Notes : ${notesLevelController.text.toString()}');
+                      log('Date Time : ${patientDataProvider.selectedDate} -- ${patientDataProvider.selectedTime} ');
+
+                      final sugarData = SugarData(
+                        measured: '${patientDataProvider.selectedCondition}',
+                        sugarValue:
+                        double.tryParse(sugarLevelController.text.trim()),
+                        notes: '${notesLevelController.text.trim()}',
+                        date: '${patientDataProvider.selectedDate}',
+                        time: '${patientDataProvider.selectedTime}',
+                      );
+
+                      final res =
+                      await sl<LocalDbProvider>().addSugarData(sugarData);
+
+                      showSnackbar('Sugar Data Added.');
+
+                      notesLevelController.clear();
+                      sugarLevelController.clear();
+
+                      print('UI Result: ${res}');
+                    }
+
+
                   },
                 ),
               ],

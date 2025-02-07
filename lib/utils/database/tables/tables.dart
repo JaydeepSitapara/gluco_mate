@@ -13,7 +13,7 @@ class Tables {
   static const String columnBloodGroup = 'bloodGroup';
   static const String columnType = 'type'; //diabetes-type
 
-  //for suger-data table columns
+  //for sugar-data table columns
   static const String columnSugarValue = 'sugarValue';
   static const String columnDate = 'date';
   static const String columnTime = 'time';
