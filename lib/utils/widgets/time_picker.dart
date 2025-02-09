@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gluco_mate/utils/style.dart';
 
 class TimePickerWidget extends StatefulWidget {
   final TimeOfDay? initialTime;
@@ -74,7 +75,7 @@ class _TimePickerWidgetState extends State<TimePickerWidget> {
           children: [
             Text(
               formattedTime,
-              style: TextStyle(
+              style: montserratStyle(
                 fontSize: 16.sp,
                 fontWeight: FontWeight.w500,
                 color: Colors.black38,

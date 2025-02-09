@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gluco_mate/providers/patient_data_provider.dart';
 import 'package:gluco_mate/screens/sugardata/add_sugar_data_screen.dart';
+import 'package:gluco_mate/screens/sugardata/sugar_data_list_screen.dart';
 import 'package:gluco_mate/utils/database/db_helper.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:gluco_mate/utils/database/local_db_provider.dart';
@@ -18,7 +19,7 @@ Future<void> main() async {
     Phoenix(
       child: MultiProvider(
         providers: [
-          ChangeNotifierProvider(create: (_) => sl<PatientDataProvider>()),
+          ChangeNotifierProvider(create: (_) => sl<SugarDataProvider>()),
           ChangeNotifierProvider(create: (_) => sl<LocalDbProvider>()),
         ],
         child: const MyApp(),
@@ -44,7 +45,7 @@ class MyApp extends StatelessWidget {
           ),
           useMaterial3: true,
         ),
-        home: AddSugarDataScreen(),
+        home: SugarDataListScreen(),
       ),
     );
   }

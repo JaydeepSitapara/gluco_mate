@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gluco_mate/utils/style.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -77,7 +78,7 @@ class _DatePickerWidgetState extends State<DatePickerWidget> {
           children: [
             Text(
               formattedDate,
-              style: TextStyle(
+              style: montserratStyle(
                 fontSize: 16.sp,
                 fontWeight: FontWeight.w500,
                 color: Colors.black38,

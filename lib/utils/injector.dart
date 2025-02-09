@@ -5,6 +5,6 @@ import 'package:gluco_mate/utils/database/local_db_provider.dart';
 final sl = GetIt.instance;
 
 void setupInjector() {
-  sl.registerLazySingleton<PatientDataProvider>(() => PatientDataProvider());
+  sl.registerLazySingleton<SugarDataProvider>(() => SugarDataProvider());
   sl.registerLazySingleton<LocalDbProvider>(() => LocalDbProvider());
 }

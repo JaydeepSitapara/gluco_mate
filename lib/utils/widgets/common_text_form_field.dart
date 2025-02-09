@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gluco_mate/utils/style.dart';
 
 class CommonTextFormField extends StatelessWidget {
   final TextEditingController controller;
@@ -25,7 +26,7 @@ class CommonTextFormField extends StatelessWidget {
       controller: controller,
       obscureText: obscureText,
       keyboardType: keyboardType,
-      style: TextStyle(
+      style: montserratStyle(
         fontSize: 16.sp, // Normal font size
         fontWeight: FontWeight.w400,
         color: Colors.black87,
@@ -33,13 +34,13 @@ class CommonTextFormField extends StatelessWidget {
       maxLines: maxLines,
 
       decoration: InputDecoration(
-        labelStyle: TextStyle(
+        labelStyle: montserratStyle(
           fontSize: 14.sp, // Normal hint text size
           color: Colors.grey,
         ),
         label:  Text('$labelText'),
         hintText: hintText, // Default hint text
-        hintStyle: TextStyle(
+        hintStyle: montserratStyle(
           fontSize: 14.sp, // Normal hint text size
           color: Colors.grey,
         ),

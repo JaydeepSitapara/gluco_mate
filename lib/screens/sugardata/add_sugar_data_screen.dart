@@ -1,17 +1,15 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:gluco_mate/models/suger_data_model.dart';
 import 'package:gluco_mate/providers/patient_data_provider.dart';
-import 'package:gluco_mate/utils/database/local_db_provider.dart';
+import 'package:gluco_mate/screens/sugardata/sugar_data_list_screen.dart';
 import 'package:gluco_mate/utils/injector.dart';
+import 'package:gluco_mate/utils/style.dart';
 import 'package:gluco_mate/utils/widgets/common_text_form_field.dart';
 import 'package:gluco_mate/utils/widgets/condition_selection_drop_down.dart';
 import 'package:gluco_mate/utils/widgets/custom_save_button.dart';
 import 'package:gluco_mate/utils/widgets/date_picker.dart';
-import 'package:gluco_mate/utils/widgets/show_toast.dart';
 import 'package:gluco_mate/utils/widgets/time_picker.dart';
-
 import 'package:provider/provider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -23,138 +21,123 @@ class AddSugarDataScreen extends StatefulWidget {
 }
 
 class _AddSugarDataScreenState extends State<AddSugarDataScreen> {
-  final sugarLevelController = TextEditingController();
-  final notesLevelController = TextEditingController();
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        titleSpacing: 0,
-        leading: Icon(
-          Icons.close,
-          size: 26.h,
-        ),
-        title: Text(
-          'New Record',
-          style: TextStyle(fontSize: 20.sp),
-        ),
-      ),
-      body: Consumer<PatientDataProvider>(
-        builder: (context, patientDataProvider, child) {
-          return Padding(
-            padding: EdgeInsets.all(16.0.h),
+    return Consumer<SugarDataProvider>(
+      builder: (context, sugarDataProvider, child) {
+        return Scaffold(
+          backgroundColor: Colors.white,
+          resizeToAvoidBottomInset: true,
+          appBar: AppBar(
+            backgroundColor: Colors.white,
+            titleSpacing: 0,
+            leading: IconButton(
+              icon: Icon(Icons.close, size: 26.h, color: Colors.black87),
+              onPressed: () => Navigator.pop(context),
+            ),
+            title: Text(
+              'New Record',
+              style: montserratStyle(
+                fontSize: 20.sp,
+                fontWeight: FontWeight.w600,
+                color: Colors.black87,
+              ),
+            ),
+            elevation: 1,
+          ),
+          body: SafeArea(
             child: Column(
-              spacing: 5.0.h,
-              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  children: [
-                    Expanded(
-                      child: Divider(),
+                Expanded(
+                  child: SingleChildScrollView(
+                    padding: EdgeInsets.all(16.0.h),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            const Expanded(child: Divider(color: Colors.black26)),
+                            SizedBox(width: 12.w),
+                            Text(
+                              'Condition',
+                              style: montserratStyle(
+                                fontSize: 16.sp,
+                                color: Colors.black54,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            SizedBox(width: 12.w),
+                            const Expanded(child: Divider(color: Colors.black26)),
+                          ],
+                        ),
+                        SizedBox(height: 10.h),
+                        CustomDropDown(),
+                        SizedBox(height: 10.h),
+                        CommonTextFormField(
+                          controller: sugarDataProvider.sugarLevelController,
+                          labelText: 'Sugar Concentration',
+                          hintText: 'mg/dL',
+                          keyboardType: TextInputType.number,
+                        ),
+                        SizedBox(height: 10.h),
+                        CommonTextFormField(
+                          controller: sugarDataProvider.notesLevelController,
+                          maxLines: 4,
+                          labelText: 'Notes',
+                          hintText: 'Enter notes',
+                          keyboardType: TextInputType.text,
+                        ),
+                      ],
                     ),
-                    SizedBox(
-                      width: 12.w,
-                    ),
-                    Text(
-                      'Condition',
-                      style: TextStyle(
-                        fontSize: 16.sp,
-                        color: Colors.black26,
-                        fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 12.h, vertical: 10.h),
+                  child: Column(
+                    children: [
+                      Row(
+                        children: [
+                          Expanded(
+                            child: DatePickerWidget(
+                              onDateSelected: (value) {
+                                sugarDataProvider.updateDate(value);
+                                log('Selected Date : ${value.toString()} ');
+                              },
+                            ),
+                          ),
+                          SizedBox(width: 10.w),
+                          Expanded(
+                            child: TimePickerWidget(
+                              onTimeSelected: (value) {
+                                sugarDataProvider.updateTime(value);
+                                log('Selected Time : ${value.toString()} ');
+                              },
+                            ),
+                          ),
+                        ],
                       ),
-                    ),
-                    SizedBox(
-                      width: 12.w,
-                    ),
-                    Expanded(
-                      child: Divider(),
-                    ),
-                  ],
-                ),
-                CustomDropdown(),
-                SizedBox(height: 10.h),
-                CommonTextFormField(
-                  controller: sugarLevelController,
-                  labelText: 'Super Concentration',
-                  hintText: 'mmol/L',
-                ),
-                SizedBox(height: 5.h),
-                CommonTextFormField(
-                  controller: notesLevelController,
-                  maxLines: 4,
-                  labelText: 'Notes',
-                  hintText: 'notes',
-                  keyboardType: TextInputType.text,
-                ),
-                const Expanded(
-                  child: SizedBox(),
-                ),
-                Row(
-                  children: [
-                    Expanded(
-                      child: DatePickerWidget(
-                        onDateSelected: (value) {
-                          patientDataProvider.updateDate(value);
-                          log('Selected Date : ${value.toString()} ');
+                      SizedBox(height: 10.h),
+                      SaveButton(
+                        onPressed: () async {
+                          final res = await sugarDataProvider.addSugarData();
+
+                          if (res > 0) {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => SugarDataListScreen(),
+                              ),
+                            );
+                          }
                         },
                       ),
-                    ),
-                    SizedBox(
-                      width: 10.w,
-                    ),
-                    Expanded(
-                      child: TimePickerWidget(
-                        onTimeSelected: (value) {
-                          patientDataProvider.updateTime(value);
-                          log('Selected Time : ${value.toString()} ');
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 1.h),
-                SaveButton(
-                  onPressed: () async {
-
-                    if(sugarLevelController.text.isEmpty) {
-                      showSnackbar('Provider Sugar Concentration.');
-                    }else {
-                      log('Condition : ${patientDataProvider.selectedCondition}');
-                      log('Sugar Level : ${sugarLevelController.text.toString()}');
-                      log('Notes : ${notesLevelController.text.toString()}');
-                      log('Date Time : ${patientDataProvider.selectedDate} -- ${patientDataProvider.selectedTime} ');
-
-                      final sugarData = SugarData(
-                        measured: '${patientDataProvider.selectedCondition}',
-                        sugarValue:
-                        double.tryParse(sugarLevelController.text.trim()),
-                        notes: '${notesLevelController.text.trim()}',
-                        date: '${patientDataProvider.selectedDate}',
-                        time: '${patientDataProvider.selectedTime}',
-                      );
-
-                      final res =
-                      await sl<LocalDbProvider>().addSugarData(sugarData);
-
-                      showSnackbar('Sugar Data Added.');
-
-                      notesLevelController.clear();
-                      sugarLevelController.clear();
-
-                      print('UI Result: ${res}');
-                    }
-
-
-                  },
+                    ],
+                  ),
                 ),
               ],
             ),
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 }

@@ -15,6 +15,15 @@ class SugarData {
     this.notes,
   });
 
+  factory SugarData.fromMap(Map<String, dynamic> json) => SugarData(
+        id: json['id'],
+        sugarValue: json['sugarValue'],
+        date: json['date'],
+        time: json['time'],
+        measured: json['measured'],
+        notes: json['notes'],
+      );
+
   SugarData.fromJson(Map<String, dynamic> json) {
     json['id'] = id;
     json['sugarValue'] = sugarValue;
@@ -22,6 +31,13 @@ class SugarData {
     json['time'] = time;
     json['measured'] = measured;
     json['notes'] = notes;
+  }
+
+  static List<SugarData> listFromJson(List<Map<String, Object?>> list) {
+    return list
+        .map((sugarData) =>
+            SugarData.fromJson(Map<String, dynamic>.from(sugarData)))
+        .toList();
   }
 
   Map<String, dynamic> toMap() => {
