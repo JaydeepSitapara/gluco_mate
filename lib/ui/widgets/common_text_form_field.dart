@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:gluco_mate/utils/style.dart';
+import 'package:gluco_mate/ui/theme/style.dart';
 
 class CommonTextFormField extends StatelessWidget {
   final TextEditingController controller;

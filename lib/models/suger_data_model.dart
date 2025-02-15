@@ -33,13 +33,6 @@ class SugarData {
     json['notes'] = notes;
   }
 
-  static List<SugarData> listFromJson(List<Map<String, Object?>> list) {
-    return list
-        .map((sugarData) =>
-            SugarData.fromJson(Map<String, dynamic>.from(sugarData)))
-        .toList();
-  }
-
   Map<String, dynamic> toMap() => {
         'id': id,
         'sugarValue': sugarValue,

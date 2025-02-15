@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gluco_mate/providers/patient_data_provider.dart';
-import 'package:gluco_mate/utils/style.dart';
+import 'package:gluco_mate/ui/theme/style.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 

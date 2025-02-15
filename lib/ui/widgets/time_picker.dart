@@ -1,34 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:gluco_mate/utils/style.dart';
+import 'package:gluco_mate/providers/patient_data_provider.dart';
+import 'package:gluco_mate/ui/theme/style.dart';
+import 'package:gluco_mate/utils/injector.dart';
 
-class TimePickerWidget extends StatefulWidget {
-  final TimeOfDay? initialTime;
-  final Function(TimeOfDay) onTimeSelected;
+class TimePickerWidget extends StatelessWidget {
+  TimePickerWidget({super.key});
 
-  const TimePickerWidget({
-    Key? key,
-    this.initialTime,
-    required this.onTimeSelected,
-  }) : super(key: key);
-
-  @override
-  _TimePickerWidgetState createState() => _TimePickerWidgetState();
-}
-
-class _TimePickerWidgetState extends State<TimePickerWidget> {
-  TimeOfDay? selectedTime;
-
-  @override
-  void initState() {
-    super.initState();
-    selectedTime = widget.initialTime ?? TimeOfDay.now();
-  }
+  final sugarDataProvider = sl<SugarDataProvider>();
 
   Future<void> _selectTime(BuildContext context) async {
     TimeOfDay? pickedTime = await showTimePicker(
       context: context,
-      initialTime: selectedTime ?? TimeOfDay.now(),
+      initialTime: sugarDataProvider.selectedTime ?? TimeOfDay.now(),
       builder: (BuildContext context, Widget? child) {
         return Theme(
           data: ThemeData.light().copyWith(
@@ -41,24 +25,22 @@ class _TimePickerWidgetState extends State<TimePickerWidget> {
     );
 
     if (pickedTime != null) {
-      setState(() {
-        selectedTime = pickedTime;
-      });
-      widget.onTimeSelected(selectedTime!);
+      sugarDataProvider.updateTime(pickedTime);
     }
   }
 
   @override
   Widget build(BuildContext context) {
     // Format the time to display AM/PM
-    String formattedTime = selectedTime != null
-        ? selectedTime!.format(context)  // This will show AM/PM format
+    String formattedTime = sugarDataProvider.selectedTime != null
+        ? sugarDataProvider.selectedTime!
+            .format(context) // This will show AM/PM format
         : 'Select Time';
 
     return GestureDetector(
       onTap: () => _selectTime(context),
       child: Container(
-        padding:  EdgeInsets.symmetric(horizontal: 14.w, vertical: 10.h),
+        padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 10.h),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10.dm),
           color: Colors.white,

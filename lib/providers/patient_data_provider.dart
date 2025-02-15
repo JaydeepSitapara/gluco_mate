@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:gluco_mate/models/suger_data_model.dart';
 import 'package:gluco_mate/utils/database/local_db_provider.dart';
 import 'package:gluco_mate/utils/injector.dart';
-import 'package:gluco_mate/utils/widgets/show_toast.dart';
+import 'package:gluco_mate/ui/widgets/show_toast.dart';
 
 class SugarDataProvider extends ChangeNotifier {
   List<SugarData> _sugarDataList = [];
@@ -12,11 +12,19 @@ class SugarDataProvider extends ChangeNotifier {
   List<SugarData> get sugarDataList => _sugarDataList;
 
   final _sugarLevelController = TextEditingController();
-  final _notesLevelController = TextEditingController();
+  final _notesController = TextEditingController();
 
   TextEditingController get sugarLevelController => _sugarLevelController;
 
-  TextEditingController get notesLevelController => _notesLevelController;
+  TextEditingController get notesController => _notesController;
+
+  updateSugarValue(String sugarValue) {
+    _sugarLevelController.text = sugarValue.toString();
+  }
+
+  updateNotes(String notes) {
+    _notesController.text = notes;
+  }
 
   String? selectedCondition = 'Morning Before Breakfast';
   TimeOfDay? selectedTime = TimeOfDay.now();
@@ -55,7 +63,7 @@ class SugarDataProvider extends ChangeNotifier {
 
   void updateSelectedCondition(String? condition) {
     selectedCondition = condition;
-    notifyListeners(); // Notify listeners about the state change
+    notifyListeners();
   }
 
   void updateDate(DateTime? dateTime) {
@@ -73,17 +81,19 @@ class SugarDataProvider extends ChangeNotifier {
       if (_sugarLevelController.text.isEmpty) {
         showSnackbar('Provider Sugar Concentration.');
       } else {
-        log('Condition : ${selectedCondition}');
-        log('Sugar Level : ${sugarLevelController.text.toString()}');
-        log('Notes : ${notesLevelController.text.toString()}');
-        log('Date Time : ${selectedDate} -- ${selectedTime} ');
+        log('Condition : $selectedCondition');
+        log('Sugar Level : ${_sugarLevelController.text.toString()}');
+        log('Notes : ${_notesController.text.toString()}');
+        log('Date Time : $selectedDate -- $selectedTime ');
 
         final sugarData = SugarData(
-          measured: '${selectedCondition}',
+          measured: '$selectedCondition',
           sugarValue: double.tryParse(_sugarLevelController.text.trim()),
-          notes: '${_notesLevelController.text.trim()}',
-          date: '${selectedDate}',
-          time: '${selectedTime}',
+          notes: _notesController.text.trim(),
+          date: selectedDate?.toIso8601String(),
+          time: DateTime(
+                  0, 0, 0, selectedTime?.hour ?? 0, selectedTime?.minute ?? 0)
+              .toIso8601String(),
         );
 
         final response = await sl<LocalDbProvider>().addSugarData(sugarData);
@@ -91,11 +101,11 @@ class SugarDataProvider extends ChangeNotifier {
         showSnackbar('Sugar Data Added.');
 
         _sugarLevelController.clear();
-        _notesLevelController.clear();
+        _notesController.clear();
         selectedCondition = 'Morning Before Breakfast';
         notifyListeners();
 
-        print('Result: ${response}');
+        print('Result: $response');
 
         return response;
       }
@@ -108,17 +118,78 @@ class SugarDataProvider extends ChangeNotifier {
     }
   }
 
+  Future<int> updateSugarData(int sugarDataId) async {
+    try {
+      if (_sugarLevelController.text.isEmpty) {
+        showSnackbar('Provider Sugar Concentration.');
+        return 0;
+      } else {
+        log('Condition : $selectedCondition');
+        log('Sugar Level : ${_sugarLevelController.text.toString()}');
+        log('Notes : ${_notesController.text.toString()}');
+        log('Date Time : $selectedDate -- $selectedTime ');
+
+        final sugarData = SugarData(
+          measured: '$selectedCondition',
+          sugarValue: double.tryParse(_sugarLevelController.text.trim()),
+          notes: _notesController.text.trim(),
+          date: '$selectedDate',
+          time:
+          '${DateTime(0, 0, 0, selectedTime?.hour ?? 0, selectedTime?.minute ?? 0)}',
+        );
+
+        final response =
+        await sl<LocalDbProvider>().updateSugarData(sugarData, sugarDataId);
+
+        if (response > 0) {
+          showSnackbar('Sugar Data Updated.');
+          print('Record updated successfully');
+        }
+
+        _sugarLevelController.clear();
+        _notesController.clear();
+        selectedCondition = 'Morning Before Breakfast';
+        notifyListeners();
+
+        return response;
+      }
+    } catch (e) {
+      log('error in update sugarData: ${e.toString()}');
+
+      return 0;
+    }
+  }
+
+  Future<int> deleteSugarData(int sugarDataId) async {
+    try {
+      int deletedRows =
+          await sl<LocalDbProvider>().deleteSugarData(sugarDataId);
+      if (deletedRows > 0) {
+        showSnackbar('Record deleted successfully.');
+        print('Record deleted successfully');
+
+        return deletedRows;
+      }
+      return 0;
+    } catch (e) {
+      log('Error in delete SugarData: ${e.toString()}');
+
+      return 0;
+    }
+  }
+
   Future<void> getSugarDataList() async {
     try {
       final list = await sl<LocalDbProvider>().getListSugarData();
 
       if (list.isNotEmpty) {
         _sugarDataList = list;
-        notifyListeners();
       } else {
         _sugarDataList = [];
         print('No Records Found.');
       }
+
+      notifyListeners();
     } catch (e) {
       print('Error in get sugarData list: ${e.toString()}');
     }

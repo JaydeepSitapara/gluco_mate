@@ -10,19 +10,12 @@ String formatDate(String dateTime) {
   }
 }
 
-TimeOfDay stringToTimeOfDay(String timeString) {
-  List<String> parts = timeString.split(':');
-  int hour = int.parse(parts[0]);
-  int minute = int.parse(parts[1]);
-  return TimeOfDay(hour: hour, minute: minute);
-}
 
-
-String formatFullDateTime(String dateTime) {
+String formatTime(String time) {
   try {
-    DateTime parsedDate = DateTime.parse(dateTime);
-    return DateFormat('dd MMM yyyy, hh:mm a').format(parsedDate);
+    DateTime parsedDate = DateTime.parse(time);
+    return DateFormat('hh:mm a').format(parsedDate);
   } catch (e) {
-    return 'Invalid DateTime';
+    return 'Invalid Time';
   }
 }

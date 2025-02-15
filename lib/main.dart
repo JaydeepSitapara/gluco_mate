@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gluco_mate/providers/patient_data_provider.dart';
-import 'package:gluco_mate/screens/sugardata/add_sugar_data_screen.dart';
-import 'package:gluco_mate/screens/sugardata/sugar_data_list_screen.dart';
+import 'package:gluco_mate/ui/splash/splash_screen.dart';
 import 'package:gluco_mate/utils/database/db_helper.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:gluco_mate/utils/database/local_db_provider.dart';
@@ -45,7 +44,7 @@ class MyApp extends StatelessWidget {
           ),
           useMaterial3: true,
         ),
-        home: SugarDataListScreen(),
+        home: const SplashScreen(),
       ),
     );
   }

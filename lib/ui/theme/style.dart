@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:gluco_mate/ui/theme/colors.dart';
 
 TextStyle montserratStyle({
   double? fontSize,
   FontWeight fontWeight = FontWeight.normal,
-  Color color = Colors.black,
+  Color color = blackColor,
 }) {
-  return GoogleFonts.montserrat(
+  return TextStyle(
     fontSize: fontSize,
     fontWeight: fontWeight,
+    fontFamily: 'Montserrat',
     color: color,
   );
 }

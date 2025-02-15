@@ -54,7 +54,6 @@ dev_dependencies:
   path_provider: ^2.1.5 #used for locations on the filesystem
   flutter_phoenix: ^1.1.1 #Easily restart your application from scratch, losing any previous state
   get_it: ^8.0.3
-  google_fonts: ^6.2.1 #for google fonts
 
 
 # For information on the generic Dart part of this file, see the
@@ -84,6 +83,13 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
+  fonts:
+    - family: Montserrat
+      fonts:
+        - asset: fonts/Montserrat-Bold.ttf
+        - asset: fonts/Montserrat-Light.ttf
+        - asset: fonts/Montserrat-Medium.ttf
+        - asset: fonts/Montserrat-Regular.ttf
   # fonts:
   #   - family: Montserrat
   #     fonts:

@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:gluco_mate/utils/style.dart';
+import 'package:gluco_mate/ui/theme/style.dart';
 
 class SaveButton extends StatelessWidget {
   final VoidCallback? onPressed;
+  final String? buttonText;
 
-  SaveButton({super.key, required this.onPressed});
+  SaveButton({
+    super.key,
+    required this.onPressed,
+    required this.buttonText,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +26,7 @@ class SaveButton extends StatelessWidget {
           ),
         ),
         child: Text(
-          'Save',
+          '${buttonText ?? ''}',
           style: montserratStyle(
             fontSize: 18.sp,
             fontWeight: FontWeight.w500,

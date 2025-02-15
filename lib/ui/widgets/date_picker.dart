@@ -1,35 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:gluco_mate/utils/style.dart';
+import 'package:gluco_mate/providers/patient_data_provider.dart';
+import 'package:gluco_mate/ui/theme/style.dart';
+import 'package:gluco_mate/utils/injector.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class DatePickerWidget extends StatefulWidget {
-  final DateTime? initialDate;
-  final Function(DateTime) onDateSelected;
+class DatePickerWidget extends StatelessWidget {
+  DatePickerWidget({
+    super.key,
+  });
 
-  const DatePickerWidget({
-    Key? key,
-    this.initialDate,
-    required this.onDateSelected,
-  }) : super(key: key);
-
-  @override
-  _DatePickerWidgetState createState() => _DatePickerWidgetState();
-}
-
-class _DatePickerWidgetState extends State<DatePickerWidget> {
-   DateTime? selectedDate;
-
-  @override
-  void initState() {
-    super.initState();
-    selectedDate = widget.initialDate ?? DateTime.now();
-  }
+  final sugarDataProvider = sl<SugarDataProvider>();
 
   Future<void> _selectDate(BuildContext context) async {
     DateTime? pickedDate = await showDatePicker(
       context: context,
-      initialDate: selectedDate ?? DateTime.now(),
+      initialDate: sugarDataProvider.selectedDate ?? DateTime.now(),
       firstDate: DateTime(2000),
       lastDate: DateTime(2100),
       builder: (BuildContext context, Widget? child) {
@@ -37,7 +23,8 @@ class _DatePickerWidgetState extends State<DatePickerWidget> {
           data: ThemeData.light().copyWith(
             primaryColor: Colors.blue,
             //accentColor: Colors.blueAccent,
-            buttonTheme: ButtonThemeData(textTheme: ButtonTextTheme.primary),
+            buttonTheme:
+                const ButtonThemeData(textTheme: ButtonTextTheme.primary),
           ),
           child: child!,
         );
@@ -45,23 +32,20 @@ class _DatePickerWidgetState extends State<DatePickerWidget> {
     );
 
     if (pickedDate != null) {
-      setState(() {
-        selectedDate = pickedDate;
-      });
-      widget.onDateSelected(selectedDate!);
+      sugarDataProvider.updateDate(pickedDate);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    String formattedDate = selectedDate != null
-        ? DateFormat('dd-MMM-yy').format(selectedDate!)
+    String formattedDate = sugarDataProvider.selectedDate != null
+        ? DateFormat('dd MMM yy').format(sugarDataProvider.selectedDate!)
         : 'Select Date';
 
     return GestureDetector(
       onTap: () => _selectDate(context),
       child: Container(
-        padding:  EdgeInsets.symmetric(horizontal: 14.w, vertical: 10.h),
+        padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 10.h),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10.dm),
           color: Colors.white,
@@ -84,7 +68,7 @@ class _DatePickerWidgetState extends State<DatePickerWidget> {
                 color: Colors.black38,
               ),
             ),
-            const  Icon(Icons.calendar_today, color: Colors.grey),
+            const Icon(Icons.calendar_today, color: Colors.grey),
           ],
         ),
       ),
