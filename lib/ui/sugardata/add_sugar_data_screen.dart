@@ -1,9 +1,8 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:gluco_mate/models/suger_data_model.dart';
 import 'package:gluco_mate/providers/patient_data_provider.dart';
 import 'package:gluco_mate/ui/sugardata/sugar_data_list_screen.dart';
+import 'package:gluco_mate/ui/theme/colors.dart';
 import 'package:gluco_mate/utils/injector.dart';
 import 'package:gluco_mate/ui/theme/style.dart';
 import 'package:gluco_mate/ui/widgets/common_text_form_field.dart';
@@ -62,10 +61,14 @@ class _AddSugarDataScreenState extends State<AddSugarDataScreen> {
           backgroundColor: Colors.white,
           resizeToAvoidBottomInset: true,
           appBar: AppBar(
-            backgroundColor: Colors.white,
+            backgroundColor: whiteColor,
             titleSpacing: 0,
             leading: IconButton(
-                icon: Icon(Icons.close, size: 26.h, color: Colors.black87),
+                icon: Icon(
+                  Icons.close,
+                  size: 28.h,
+
+                ),
                 onPressed: () => {
                       Navigator.pop(context),
                       sugarDataProvider.sugarLevelController.clear(),
@@ -92,16 +95,19 @@ class _AddSugarDataScreenState extends State<AddSugarDataScreen> {
                               );
                             }
                           },
-                          child: const Icon(Icons.delete)),
+                          child: Icon(
+                            Icons.delete_forever_outlined,
+
+                            size: 24.h,
+                          )),
                     )
                   : const SizedBox(),
             ],
             title: Text(
-              widget.isEditSugarData ?? false ? 'Update' : 'New Record',
+              widget.isEditSugarData ?? false ? 'Update Record' : 'New Record',
               style: montserratStyle(
-                fontSize: 20.sp,
+                fontSize: 18.sp,
                 fontWeight: FontWeight.w600,
-                color: Colors.black87,
               ),
             ),
             elevation: 1,
@@ -113,6 +119,7 @@ class _AddSugarDataScreenState extends State<AddSugarDataScreen> {
                   child: SingleChildScrollView(
                     padding: EdgeInsets.all(16.0.h),
                     child: Column(
+                      spacing: 1.h,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Row(
@@ -123,8 +130,8 @@ class _AddSugarDataScreenState extends State<AddSugarDataScreen> {
                             Text(
                               'Condition',
                               style: montserratStyle(
-                                fontSize: 16.sp,
-                                color: Colors.black54,
+                                fontSize: 12.sp,
+                                color: Colors.black38,
                                 fontWeight: FontWeight.w600,
                               ),
                             ),

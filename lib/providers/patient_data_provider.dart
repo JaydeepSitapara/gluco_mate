@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:gluco_mate/models/suger_data_model.dart';
+import 'package:gluco_mate/ui/widgets/dropdown_text_widget.dart';
 import 'package:gluco_mate/utils/database/local_db_provider.dart';
 import 'package:gluco_mate/utils/injector.dart';
 import 'package:gluco_mate/ui/widgets/show_toast.dart';
@@ -33,31 +34,31 @@ class SugarDataProvider extends ChangeNotifier {
   List<DropdownMenuItem<String>> conditionList = const [
     DropdownMenuItem(
       value: 'Morning Before Breakfast',
-      child: Text('Morning Before Breakfast'),
+      child: DropdownTextWidget(text: 'Morning Before Breakfast'),
     ),
     DropdownMenuItem(
       value: 'Morning After 2 Hours',
-      child: Text('Morning After 2 Hours'),
+      child: DropdownTextWidget(text: 'Morning After 2 Hours'),
     ),
     DropdownMenuItem(
       value: 'Afternoon Before Lunch',
-      child: Text('Afternoon Before Lunch'),
+      child: DropdownTextWidget(text: 'Afternoon Before Lunch'),
     ),
     DropdownMenuItem(
       value: 'Afternoon After 2 hours',
-      child: Text('Afternoon After 2 hours'),
+      child: DropdownTextWidget(text: 'Afternoon After 2 hours'),
     ),
     DropdownMenuItem(
       value: 'Evening Before Dinner',
-      child: Text('Evening Before Dinner'),
+      child: DropdownTextWidget(text: 'Evening Before Dinner'),
     ),
     DropdownMenuItem(
       value: 'Evening After 2 Hours',
-      child: Text('Evening After 2 Hours'),
+      child: DropdownTextWidget(text: 'Evening After 2 Hours'),
     ),
     DropdownMenuItem(
       value: 'Mid Night',
-      child: Text('Mid Night'),
+      child: DropdownTextWidget(text: 'Mid Night'),
     ),
   ];
 
@@ -78,8 +79,17 @@ class SugarDataProvider extends ChangeNotifier {
 
   Future<int> addSugarData() async {
     try {
-      if (_sugarLevelController.text.isEmpty) {
-        showSnackbar('Provider Sugar Concentration.');
+      final num? sugarLevel = num.tryParse(_sugarLevelController.text);
+      if (sugarLevel == null) {
+        showSnackbar('Please enter sugar concentration.');
+      } else if (sugarLevel < 50) {
+        showSnackbar('Too low! Please check your value');
+      } else if (sugarLevel > 500) {
+        showSnackbar('Too high! Consult a doctor');
+      } else if (selectedDate == null) {
+        showSnackbar('Please select Date.');
+      } else if (selectedTime == null) {
+        showSnackbar('Please select Time.');
       } else {
         log('Condition : $selectedCondition');
         log('Sugar Level : ${_sugarLevelController.text.toString()}');
@@ -135,11 +145,11 @@ class SugarDataProvider extends ChangeNotifier {
           notes: _notesController.text.trim(),
           date: '$selectedDate',
           time:
-          '${DateTime(0, 0, 0, selectedTime?.hour ?? 0, selectedTime?.minute ?? 0)}',
+              '${DateTime(0, 0, 0, selectedTime?.hour ?? 0, selectedTime?.minute ?? 0)}',
         );
 
         final response =
-        await sl<LocalDbProvider>().updateSugarData(sugarData, sugarDataId);
+            await sl<LocalDbProvider>().updateSugarData(sugarData, sugarDataId);
 
         if (response > 0) {
           showSnackbar('Sugar Data Updated.');

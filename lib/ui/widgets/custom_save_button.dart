@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gluco_mate/ui/theme/colors.dart';
 import 'package:gluco_mate/ui/theme/style.dart';
 
 class SaveButton extends StatelessWidget {
@@ -26,10 +27,10 @@ class SaveButton extends StatelessWidget {
           ),
         ),
         child: Text(
-          '${buttonText ?? ''}',
+          buttonText ?? '',
           style: montserratStyle(
             fontSize: 18.sp,
-            fontWeight: FontWeight.w500,
+            fontWeight: FontWeight.w700,
             color: Colors.white, // Text color remains white
           ),
         ),

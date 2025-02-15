@@ -26,9 +26,7 @@ class _SugarDataListScreenState extends State<SugarDataListScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-
         scrolledUnderElevation: 0,
-        automaticallyImplyLeading: false,
         title: Text(
           'Gluco Mate',
           style: montserratStyle(
@@ -58,6 +56,44 @@ class _SugarDataListScreenState extends State<SugarDataListScreen> {
         ],
         backgroundColor: whiteColor,
         elevation: 0,
+        titleSpacing: 0,
+      ),
+      drawer: Drawer(
+        backgroundColor: whiteColor,
+        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            DrawerHeader(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Text(
+                    "Gluco Mate",
+                    style: montserratStyle(
+                      fontSize: 34.sp,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            ListTile(
+              leading: const Icon(Icons.file_copy),
+              title: Text(
+                'Reports',
+                style: montserratStyle(
+                  fontSize: 14.sp,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              onTap: () {
+                Navigator.pop(context); // Close Drawer
+              },
+            ),
+          ],
+        ),
       ),
       body: Consumer<SugarDataProvider>(
         builder: (context, sugarDataProvider, child) {
@@ -99,19 +135,19 @@ class _SugarDataListScreenState extends State<SugarDataListScreen> {
     return InkWell(
       onTap: onTap,
       child: Card(
+        elevation: 1,
         color: Colors.grey.shade100,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10.r),
           side: BorderSide(
             color: Colors.blueGrey.shade100,
-            width: 0.5.w,
+            width: 1.w,
           ),
         ),
         margin: EdgeInsets.symmetric(vertical: 6.h, horizontal: 4.w),
-        elevation: 2,
         shadowColor: Colors.black12,
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
+          padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -124,9 +160,11 @@ class _SugarDataListScreenState extends State<SugarDataListScreen> {
                       Text(
                         '${sugarData.sugarValue ?? 0.0}',
                         style: montserratStyle(
-                          fontSize: 21.sp,
+                          fontSize: 22.sp,
                           fontWeight: FontWeight.bold,
-                          color: Colors.blueAccent,
+                          //color: Colors.blueAccent,
+                          color:
+                              getSugarLevelColor(sugarData.sugarValue ?? 0.0),
                         ),
                       ),
                       Text(
@@ -134,7 +172,9 @@ class _SugarDataListScreenState extends State<SugarDataListScreen> {
                         style: montserratStyle(
                           fontSize: 15.sp,
                           fontWeight: FontWeight.bold,
-                          color: Colors.blueAccent,
+                          //color: Colors.blueAccent,
+                          color:
+                              getSugarLevelColor(sugarData.sugarValue ?? 0.0),
                         ),
                       ),
                     ],
@@ -144,13 +184,13 @@ class _SugarDataListScreenState extends State<SugarDataListScreen> {
                         EdgeInsets.symmetric(horizontal: 10.w, vertical: 2.h),
                     decoration: BoxDecoration(
                         color: Colors.blueAccent.withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(10.r),
+                        borderRadius: BorderRadius.circular(4.r),
                         border: Border.all(
-                            color: Colors.grey.shade400, width: 0.5.w)),
+                            color: Colors.grey.shade400, width: 0.3.w)),
                     child: Text(
                       sugarData.measured ?? 'Unknown',
                       style: montserratStyle(
-                        fontSize: 11.sp,
+                        fontSize: 12.sp,
                         fontWeight: FontWeight.w400,
                         color: Colors.blueAccent,
                       ),
@@ -158,7 +198,7 @@ class _SugarDataListScreenState extends State<SugarDataListScreen> {
                   ),
                 ],
               ),
-              SizedBox(height: 6.h),
+              SizedBox(height: 2.h),
 
               // Date & Time
               Row(
@@ -180,7 +220,7 @@ class _SugarDataListScreenState extends State<SugarDataListScreen> {
                   ),
                 ],
               ),
-              SizedBox(height: 6.h),
+              SizedBox(height: 2.h),
 
               // Notes
               if (sugarData.notes != null && sugarData.notes!.isNotEmpty)

@@ -17,7 +17,7 @@ class CommonTextFormField extends StatelessWidget {
     this.labelText = '',
     this.obscureText = false,
     this.keyboardType = TextInputType.number,
-    this.maxLines  = 1,
+    this.maxLines = 1,
   });
 
   @override
@@ -32,14 +32,14 @@ class CommonTextFormField extends StatelessWidget {
         color: Colors.black87,
       ),
       maxLines: maxLines,
-
       decoration: InputDecoration(
         labelStyle: montserratStyle(
           fontSize: 14.sp, // Normal hint text size
           color: Colors.grey,
         ),
-        label:  Text('$labelText'),
-        hintText: hintText, // Default hint text
+        label: Text('$labelText'),
+        hintText: hintText,
+        // Default hint text
         hintStyle: montserratStyle(
           fontSize: 14.sp, // Normal hint text size
           color: Colors.grey,
@@ -51,14 +51,16 @@ class CommonTextFormField extends StatelessWidget {
           ),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8.r), // Rounded corners when focused
+          borderRadius: BorderRadius.circular(8.r),
+          // Rounded corners when focused
           borderSide: BorderSide(
             color: Colors.blueGrey, // Highlighted border color
             width: 2.w, // Thicker border on focus
           ),
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8.r), // Rounded corners for enabled state
+          borderRadius: BorderRadius.circular(8.r),
+          // Rounded corners for enabled state
           borderSide: BorderSide(
             color: Colors.black12, // Border color when enabled
             width: 1.w, // Standard border width

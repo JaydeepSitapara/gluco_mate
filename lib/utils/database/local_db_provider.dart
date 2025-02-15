@@ -21,11 +21,25 @@ class LocalDbProvider extends ChangeNotifier {
     try {
       Database? db = await DbHelper.dbHelper.database;
 
-      int response = await db.update(
-        Tables.sugarDataTable,
-        sugarData.toMap(),
-        where: 'id = ?',
-        whereArgs: [sugarDataId],
+      int response = await db.rawUpdate(
+        '''
+      UPDATE ${Tables.sugarDataTable} 
+      SET 
+        ${Tables.columnSugarValue} = ?, 
+        ${Tables.columnDate} = ?, 
+        ${Tables.columnTime} = ?,
+        ${Tables.columnMeasured} = ?,
+        ${Tables.columnNotes} = ? 
+      WHERE id = ?
+      ''',
+        [
+          sugarData.sugarValue,
+          sugarData.date,
+          sugarData.time,
+          sugarData.measured,
+          sugarData.notes,
+          sugarDataId
+        ],
       );
 
       return response;
@@ -34,7 +48,6 @@ class LocalDbProvider extends ChangeNotifier {
       return 0; // Return 0 if update fails
     }
   }
-
 
   Future<int> deleteSugarData(int sugarDataId) async {
     try {
@@ -46,15 +59,12 @@ class LocalDbProvider extends ChangeNotifier {
 
       int response = await db.rawDelete(query, [sugarDataId]);
 
-
       return response;
-
     } catch (e) {
       log('Error in delete sugarData: ${e.toString()}');
       return 0;
     }
   }
-
 
   Future<List<SugarData>> getListSugarData() async {
     try {
@@ -62,7 +72,7 @@ class LocalDbProvider extends ChangeNotifier {
 
       final response = await db.query(Tables.sugarDataTable);
 
-       List<SugarData> _sugarDataList = response.isNotEmpty
+      List<SugarData> _sugarDataList = response.isNotEmpty
           ? response.map((c) => SugarData.fromMap(c)).toList()
           : [];
       notifyListeners();

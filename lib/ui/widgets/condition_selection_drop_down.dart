@@ -1,15 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:gluco_mate/providers/patient_data_provider.dart';
+import 'package:gluco_mate/ui/theme/colors.dart';
 import 'package:gluco_mate/ui/theme/style.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
-class CustomDropDown extends StatefulWidget {
-  @override
-  State<CustomDropDown> createState() => _CustomDropdownState();
-}
-
-class _CustomDropdownState extends State<CustomDropDown> {
+class CustomDropDown extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Consumer<SugarDataProvider>(
@@ -17,19 +13,14 @@ class _CustomDropdownState extends State<CustomDropDown> {
       return Center(
         child: Container(
           width: double.infinity,
-          padding: EdgeInsets.symmetric(horizontal: 8.w),
+          padding: EdgeInsets.symmetric(horizontal: 4.w),
           decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(12.dm),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.2),
-                // Lighter shadow color
-                blurRadius: 12.dm,
-                // Increased blur radius for more elevation
-                offset: const Offset(0, 6), // Shadow spread
-              ),
-            ],
+            color: whiteColor,
+            borderRadius: BorderRadius.circular(10.r),
+            border: Border.all(
+              color: Colors.grey.shade300,
+              width: 1.w,
+            ),
           ),
           child: DropdownButton<String>(
             value: sugarDataProvider.selectedCondition,
@@ -44,25 +35,29 @@ class _CustomDropdownState extends State<CustomDropDown> {
               color: Colors.grey,
               size: 28.h,
             ),
-            dropdownColor: Colors.white,
-            style: montserratStyle(fontSize: 14.sp, color: Colors.black),
+            dropdownColor: whiteColor,
+            borderRadius: BorderRadius.circular(10.r),
+            style: montserratStyle(fontSize: 14.sp, color: blackColor),
             selectedItemBuilder: (BuildContext context) {
               return sugarDataProvider.conditionList
                   .map<Widget>((DropdownMenuItem<String> item) {
-                return Center(
+                return Align(
+                  alignment: Alignment.centerLeft,
                   child: Text(
                     item.value ?? '',
                     style:
-                        montserratStyle(fontSize: 18.sp, color: Colors.black45),
+                        montserratStyle(fontSize: 15.sp, color: blackColor),
                   ),
                 );
               }).toList();
             },
             // Adjust dropdown size// Set a maximum height for the dropdown
             alignment: Alignment.center,
+            menuMaxHeight: 350.h,
+            underline: const SizedBox(),
             // Center align the dropdown items
             // You can add custom padding for the dropdown items
-            padding: EdgeInsets.symmetric(vertical: 6.h),
+            padding: EdgeInsets.symmetric(vertical: 6.h, horizontal: 14.w),
           ),
         ),
       );
