@@ -1,8 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gluco_mate/models/suger_data_model.dart';
-import 'package:gluco_mate/providers/patient_data_provider.dart';
+import 'package:gluco_mate/providers/sugar_data_provider.dart';
 import 'package:gluco_mate/ui/sugardata/add_sugar_data_screen.dart';
+import 'package:gluco_mate/ui/sugardata/filter/filter_date_range_widget.dart';
 import 'package:gluco_mate/ui/theme/colors.dart';
 import 'package:gluco_mate/utils/date_format.dart';
 import 'package:gluco_mate/utils/injector.dart';
@@ -15,118 +18,142 @@ class SugarDataListScreen extends StatefulWidget {
 }
 
 class _SugarDataListScreenState extends State<SugarDataListScreen> {
+  final sugarDataProvider = sl<SugarDataProvider>();
+
   @override
   void initState() {
     super.initState();
-    sl<SugarDataProvider>().getSugarDataList();
+    sugarDataProvider.getSugarDataList();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        scrolledUnderElevation: 0,
-        title: Text(
-          'Gluco Mate',
-          style: montserratStyle(
-            fontSize: 22.sp,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        actions: [
-          InkWell(
-            onTap: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => AddSugarDataScreen(
-                    isEditSugarData: false,
-                  ),
-                ),
-              );
-            },
-            child: Padding(
-              padding: EdgeInsets.only(right: 8.0.h),
-              child: Icon(
-                Icons.add,
-                size: 28.h,
-              ),
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        exit(0);
+      },
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        appBar: AppBar(
+          scrolledUnderElevation: 0,
+          title: Text(
+            'Gluco Mate',
+            style: montserratStyle(
+              fontSize: 22.sp,
+              fontWeight: FontWeight.bold,
             ),
-          )
-        ],
-        backgroundColor: whiteColor,
-        elevation: 0,
-        titleSpacing: 0,
-      ),
-      drawer: Drawer(
-        backgroundColor: whiteColor,
-        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: [
-            DrawerHeader(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Text(
-                    "Gluco Mate",
-                    style: montserratStyle(
-                      fontSize: 34.sp,
-                      fontWeight: FontWeight.bold,
+          ),
+          actions: [
+            InkWell(
+              onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => AddSugarDataScreen(
+                      isEditSugarData: false,
                     ),
                   ),
-                ],
-              ),
-            ),
-            ListTile(
-              leading: const Icon(Icons.file_copy),
-              title: Text(
-                'Reports',
-                style: montserratStyle(
-                  fontSize: 14.sp,
-                  fontWeight: FontWeight.w500,
+                );
+              },
+              child: Padding(
+                padding: EdgeInsets.only(right: 8.0.h),
+                child: Icon(
+                  Icons.add,
+                  size: 28.h,
                 ),
               ),
-              onTap: () {
-                Navigator.pop(context); // Close Drawer
-              },
-            ),
+            )
           ],
+          backgroundColor: whiteColor,
+          elevation: 0,
+          titleSpacing: 0,
         ),
-      ),
-      body: Consumer<SugarDataProvider>(
-        builder: (context, sugarDataProvider, child) {
-          return sugarDataProvider.sugarDataList.isEmpty
-              ? Center(
-                  child: Text(
-                    'No Sugar Data. Please add some.',
-                    style: montserratStyle(fontSize: 16.sp, color: Colors.grey),
-                  ),
-                )
-              : Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 2.h),
-                  child: ListView.builder(
-                    itemCount: sugarDataProvider.sugarDataList.length,
-                    itemBuilder: (context, index) {
-                      final sugarData = sugarDataProvider.sugarDataList[index];
-                      return _sugarDataCard(
-                        sugarData,
-                        () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => AddSugarDataScreen(
-                                isEditSugarData: true,
-                                sugarData: sugarData,
-                              ),
-                            ),
-                          );
-                        },
-                      );
-                    },
-                  ),
-                );
-        },
+        // drawer: Drawer(
+        //   backgroundColor: whiteColor,
+        //   shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+        //   child: ListView(
+        //     padding: EdgeInsets.zero,
+        //     children: [
+        //       DrawerHeader(
+        //         child: Column(
+        //           crossAxisAlignment: CrossAxisAlignment.start,
+        //           mainAxisAlignment: MainAxisAlignment.end,
+        //           children: [
+        //             Text(
+        //               "Gluco Mate",
+        //               style: montserratStyle(
+        //                 fontSize: 34.sp,
+        //                 fontWeight: FontWeight.bold,
+        //               ),
+        //             ),
+        //           ],
+        //         ),
+        //       ),
+        //       ListTile(
+        //         leading: const Icon(Icons.file_copy),
+        //         title: Text(
+        //           'Reports',
+        //           style: montserratStyle(
+        //             fontSize: 14.sp,
+        //             fontWeight: FontWeight.w500,
+        //           ),
+        //         ),
+        //         onTap: () {
+        //           Navigator.pop(context); // Close Drawer
+        //         },
+        //       ),
+        //     ],
+        //   ),
+        // ),
+        body: Consumer<SugarDataProvider>(
+          builder: (context, sugarDataProvider, child) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 8.h),
+                  child: const FilterDateRangeWidget(),
+                ),
+                sugarDataProvider.sugarDataList.isEmpty
+                    ? Expanded(
+                        child: Center(
+                          child: Text(
+                            'No Sugar Data. Please add some.',
+                            style: montserratStyle(
+                                fontSize: 16.sp, color: Colors.grey),
+                          ),
+                        ),
+                      )
+                    : Expanded(
+                      child: Padding(
+                          padding:
+                              EdgeInsets.symmetric(horizontal: 4.w, vertical: 2.h),
+                          child: ListView.builder(
+                            itemCount: sugarDataProvider.sugarDataList.length,
+                            itemBuilder: (context, index) {
+                              final sugarData =
+                                  sugarDataProvider.sugarDataList[index];
+                              return _sugarDataCard(
+                                sugarData,
+                                () {
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) => AddSugarDataScreen(
+                                        isEditSugarData: true,
+                                        sugarData: sugarData,
+                                      ),
+                                    ),
+                                  );
+                                },
+                              );
+                            },
+                          ),
+                        ),
+                    )
+              ],
+            );
+          },
+        ),
       ),
     );
   }

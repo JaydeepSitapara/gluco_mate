@@ -6,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
+
   @override
   State<SplashScreen> createState() => _SplashScreenState();
 }
@@ -27,15 +28,30 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: whiteColor,
-      body: Center(
-        child: Text(
-          'Gluco Mate',
-          style: montserratStyle(
-            fontSize: 51.sp,
-            color: Colors.blueAccent,
-            fontWeight: FontWeight.bold,
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Center(
+            child: Text(
+              'Gluco Mate',
+              style: montserratStyle(
+                fontSize: 51.sp,
+                color: Colors.blueAccent,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
           ),
-        ),
+          Center(
+            child: Text(
+              'Your health, our priority!',
+              style: montserratStyle(
+                fontSize: 16.sp,
+                color: Colors.blueAccent,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

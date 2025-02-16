@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gluco_mate/providers/patient_data_provider.dart';
+import 'package:gluco_mate/providers/sugar_data_provider.dart';
 import 'package:gluco_mate/ui/splash/splash_screen.dart';
 import 'package:gluco_mate/utils/database/db_helper.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';

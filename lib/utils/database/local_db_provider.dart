@@ -66,24 +66,61 @@ class LocalDbProvider extends ChangeNotifier {
     }
   }
 
-  Future<List<SugarData>> getListSugarData() async {
+  Future<List<SugarData>> getListSugarData(
+      {String? startDate, String? endDate}) async {
     try {
       Database? db = await DbHelper.dbHelper.database;
 
-      final response = await db.query(Tables.sugarDataTable);
+      String query = 'SELECT * FROM ${Tables.sugarDataTable}';
+      List<dynamic> args = [];
+
+      if (startDate != null &&
+          startDate.isNotEmpty &&
+          endDate != null &&
+          endDate.isNotEmpty) {
+        print('Start Date: ${startDate} - end Data: ${endDate}');
+
+        query +=
+            ' WHERE ${Tables.columnDate} BETWEEN ? AND ? ORDER BY ${Tables.columnDate} ASC';
+        args = [startDate, endDate];
+      } else {
+        query +=
+            ' ORDER BY ${Tables.columnDate} ASC'; // Fetch all if no date range
+      }
+
+      final response = await db.rawQuery(query, args);
 
       List<SugarData> _sugarDataList = response.isNotEmpty
           ? response.map((c) => SugarData.fromMap(c)).toList()
           : [];
       notifyListeners();
 
-      print('SugarData List Length: ${_sugarDataList.length}');
-
+      print('Filtered SugarData List Length: ${_sugarDataList.length}');
       return _sugarDataList;
     } catch (e) {
-      log('Error in get list of sugar data: ${e.toString()}');
-
+      log('Error fetching sugar data: ${e.toString()}');
       return [];
     }
   }
+
+// Future<List<SugarData>> getListSugarData() async {
+//   try {
+//     Database? db = await DbHelper.dbHelper.database;
+//
+//     final response = await db.query(Tables.sugarDataTable);
+//
+//     List<SugarData> _sugarDataList = response.isNotEmpty
+//         ? response.map((c) => SugarData.fromMap(c)).toList()
+//         : [];
+//     notifyListeners();
+//
+//     print('SugarData List Length: ${_sugarDataList.length}');
+//
+//     return _sugarDataList;
+//   } catch (e) {
+//     log('Error in get list of sugar data: ${e.toString()}');
+//
+//     return [];
+//   }
+// }
 }

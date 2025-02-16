@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gluco_mate/models/suger_data_model.dart';
-import 'package:gluco_mate/providers/patient_data_provider.dart';
+import 'package:gluco_mate/providers/sugar_data_provider.dart';
 import 'package:gluco_mate/ui/sugardata/sugar_data_list_screen.dart';
 import 'package:gluco_mate/ui/theme/colors.dart';
 import 'package:gluco_mate/utils/injector.dart';

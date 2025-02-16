@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gluco_mate/providers/patient_data_provider.dart';
+import 'package:gluco_mate/providers/sugar_data_provider.dart';
 import 'package:gluco_mate/ui/theme/colors.dart';
 import 'package:gluco_mate/ui/theme/style.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

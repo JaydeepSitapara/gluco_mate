@@ -6,8 +6,30 @@ import 'package:gluco_mate/ui/widgets/dropdown_text_widget.dart';
 import 'package:gluco_mate/utils/database/local_db_provider.dart';
 import 'package:gluco_mate/utils/injector.dart';
 import 'package:gluco_mate/ui/widgets/show_toast.dart';
+import 'package:intl/intl.dart';
 
 class SugarDataProvider extends ChangeNotifier {
+  //for filter date range
+  DateTime? _startDate;
+  DateTime? _endDate;
+
+  DateTime? get startDate => _startDate;
+
+  DateTime? get endDate => _endDate;
+
+  set startDate(DateTime? value) {
+    _startDate = value;
+  }
+
+  set endDate(DateTime? value) {
+    _endDate = value;
+  }
+
+  clearFilter() {
+    _startDate = null;
+    _endDate = null;
+  }
+
   List<SugarData> _sugarDataList = [];
 
   List<SugarData> get sugarDataList => _sugarDataList;
@@ -100,7 +122,11 @@ class SugarDataProvider extends ChangeNotifier {
           measured: '$selectedCondition',
           sugarValue: double.tryParse(_sugarLevelController.text.trim()),
           notes: _notesController.text.trim(),
-          date: selectedDate?.toIso8601String(),
+          date: selectedDate != null
+              ? DateFormat('yyyy-MM-dd').format(
+                  selectedDate ?? DateTime.now()) // Store only 'YYYY-MM-DD'
+              : null,
+          // date: selectedDate?.toIso8601String(),
           time: DateTime(
                   0, 0, 0, selectedTime?.hour ?? 0, selectedTime?.minute ?? 0)
               .toIso8601String(),
@@ -143,7 +169,11 @@ class SugarDataProvider extends ChangeNotifier {
           measured: '$selectedCondition',
           sugarValue: double.tryParse(_sugarLevelController.text.trim()),
           notes: _notesController.text.trim(),
-          date: '$selectedDate',
+          //date: '$selectedDate',
+          date: selectedDate != null
+              ? DateFormat('yyyy-MM-dd').format(
+                  selectedDate ?? DateTime.now()) // Store only 'YYYY-MM-DD'
+              : null,
           time:
               '${DateTime(0, 0, 0, selectedTime?.hour ?? 0, selectedTime?.minute ?? 0)}',
         );
@@ -188,9 +218,12 @@ class SugarDataProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> getSugarDataList() async {
+  Future<void> getSugarDataList({String? startDate, String? endDate}) async {
     try {
-      final list = await sl<LocalDbProvider>().getListSugarData();
+      final list = await sl<LocalDbProvider>().getListSugarData(
+        startDate: startDate,
+        endDate: endDate,
+      );
 
       if (list.isNotEmpty) {
         _sugarDataList = list;
