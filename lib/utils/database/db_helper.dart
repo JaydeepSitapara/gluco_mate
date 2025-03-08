@@ -14,9 +14,9 @@ class DbHelper {
     return _database;
   }
 
-  DbHelper.DBConstrocter();
+  DbHelper.DbConstrocter();
 
-  static final DbHelper dbHelper = DbHelper.DBConstrocter();
+  static final DbHelper dbHelper = DbHelper.DbConstrocter();
 
   //getter to get database
   Future<Database> get database async {
@@ -37,7 +37,6 @@ class DbHelper {
 
   // for initialize database
   Future initDB() async {
-    //set database to user directory
     Directory userDirectory = await getApplicationDocumentsDirectory();
     String path = join(userDirectory.path, DbInfo.dbName);
     return await openDatabase(path,
@@ -46,8 +45,11 @@ class DbHelper {
 
   //for create tables.
   Future _onCreate(Database db, int version) async {
-    await db.execute(Tables.userTableQuery);
-    await db.execute(Tables.sugarDataTableQuery);
-    log("--- Table Created! ----");
+    await Future.wait([
+      db.execute(Tables.userTableQuery),
+      db.execute(Tables.sugarDataTableQuery),
+    ]).then((value) {
+      log("--- Table Created! ------${value}");
+    });
   }
 }

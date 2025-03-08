@@ -168,8 +168,32 @@ class SugarDataProvider extends ChangeNotifier {
 
   Future<int> updateSugarData(int sugarDataId) async {
     try {
-      if (_sugarLevelController.text.isEmpty) {
-        showSnackbar('Provider Sugar Concentration.');
+      final selectedUnit = await sl<SharedPreferenceService>()
+              .getString(SharedPreferenceKeys.unit) ??
+          '';
+
+      final num? sugarLevel = num.tryParse(_sugarLevelController.text);
+      if (sugarLevel == null) {
+        showSnackbar('Please enter sugar concentration.');
+        return 0;
+      } else if (selectedUnit == '${Unit.mmolL}' && sugarLevel < 2.8) {
+        showSnackbar('Tow Low!');
+        return 0;
+      } else if (selectedUnit == '${Unit.mmolL}' && sugarLevel > 27.8) {
+        showSnackbar('Tow High!');
+        return 0;
+      } else if (selectedUnit == '${Unit.mgdl}' && sugarLevel < 50) {
+        //mgdl validation
+        showSnackbar('Too low!');
+        return 0;
+      } else if (selectedUnit == '${Unit.mgdl}' && sugarLevel > 500) {
+        showSnackbar('Too high!');
+        return 0;
+      } else if (selectedDate == null) {
+        showSnackbar('Please select Date.');
+        return 0;
+      } else if (selectedTime == null) {
+        showSnackbar('Please select Time.');
         return 0;
       } else {
         log('Condition : $selectedCondition');
