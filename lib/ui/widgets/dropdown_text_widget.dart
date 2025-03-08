@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:gluco_mate/ui/theme/style.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class DropdownTextWidget extends StatelessWidget {
   const DropdownTextWidget({super.key, this.text});
@@ -9,9 +8,9 @@ class DropdownTextWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(text ?? '', style: montserratStyle(
-      fontSize: 14.0.sp,
-      fontWeight: FontWeight.w500,
-    ),);
+    return Text(
+      text ?? '',
+      style: titleTextStyle,
+    );
   }
 }

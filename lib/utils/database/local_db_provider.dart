@@ -78,14 +78,11 @@ class LocalDbProvider extends ChangeNotifier {
           startDate.isNotEmpty &&
           endDate != null &&
           endDate.isNotEmpty) {
-        print('Start Date: ${startDate} - end Data: ${endDate}');
-
         query +=
             ' WHERE ${Tables.columnDate} BETWEEN ? AND ? ORDER BY ${Tables.columnDate} ASC';
         args = [startDate, endDate];
       } else {
-        query +=
-            ' ORDER BY ${Tables.columnDate} ASC'; // Fetch all if no date range
+        query += ' ORDER BY ${Tables.columnDate} ASC';
       }
 
       final response = await db.rawQuery(query, args);
@@ -93,7 +90,6 @@ class LocalDbProvider extends ChangeNotifier {
       List<SugarData> _sugarDataList = response.isNotEmpty
           ? response.map((c) => SugarData.fromMap(c)).toList()
           : [];
-      notifyListeners();
 
       print('Filtered SugarData List Length: ${_sugarDataList.length}');
       return _sugarDataList;
@@ -102,25 +98,4 @@ class LocalDbProvider extends ChangeNotifier {
       return [];
     }
   }
-
-// Future<List<SugarData>> getListSugarData() async {
-//   try {
-//     Database? db = await DbHelper.dbHelper.database;
-//
-//     final response = await db.query(Tables.sugarDataTable);
-//
-//     List<SugarData> _sugarDataList = response.isNotEmpty
-//         ? response.map((c) => SugarData.fromMap(c)).toList()
-//         : [];
-//     notifyListeners();
-//
-//     print('SugarData List Length: ${_sugarDataList.length}');
-//
-//     return _sugarDataList;
-//   } catch (e) {
-//     log('Error in get list of sugar data: ${e.toString()}');
-//
-//     return [];
-//   }
-// }
 }

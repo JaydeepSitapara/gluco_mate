@@ -4,12 +4,24 @@ const Color whiteColor = Color(0xFFFFFFFF);
 const Color blackColor = Color(0xFF000000);
 const Color greyColor = Color(0xFF9E9E9E);
 
-Color getSugarLevelColor(double sugarValue) {
-  if (sugarValue < 70) {
-    return Colors.redAccent; // Low sugar level
-  } else if (sugarValue >= 70 && sugarValue <= 140) {
-    return Colors.greenAccent; // Normal range
+const Color blueAccent = Color(0xFF2196F3);
+
+Color getSugarLevelColor({double sugarValue = 0.0, String unit = 'Unit.mdgl'}) {
+  if (unit == 'Unit.mdgl') {
+    if (sugarValue < 3.9) {
+      return Colors.redAccent; // Low sugar level
+    } else if (sugarValue >= 3.9 && sugarValue <= 7.8) {
+      return Colors.greenAccent; // Normal range
+    } else {
+      return Colors.orangeAccent; // High sugar level
+    }
   } else {
-    return Colors.orangeAccent; // High sugar level
+    if (sugarValue < 3.9) {
+      return Colors.redAccent; // Low sugar level
+    } else if (sugarValue >= 3.9 && sugarValue <= 7.8) {
+      return Colors.greenAccent; // Normal range
+    } else {
+      return Colors.orangeAccent; // High sugar level
+    }
   }
 }

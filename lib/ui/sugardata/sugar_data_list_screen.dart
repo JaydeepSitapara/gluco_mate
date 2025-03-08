@@ -2,17 +2,21 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gluco_mate/main.dart';
 import 'package:gluco_mate/models/suger_data_model.dart';
 import 'package:gluco_mate/providers/sugar_data_provider.dart';
+import 'package:gluco_mate/ui/drawer/drawer_widget.dart';
 import 'package:gluco_mate/ui/sugardata/add_sugar_data_screen.dart';
 import 'package:gluco_mate/ui/sugardata/filter/filter_date_range_widget.dart';
 import 'package:gluco_mate/ui/theme/colors.dart';
 import 'package:gluco_mate/utils/date_format.dart';
-import 'package:gluco_mate/utils/injector.dart';
+import 'package:gluco_mate/config/injector.dart';
 import 'package:gluco_mate/ui/theme/style.dart';
 import 'package:provider/provider.dart';
 
 class SugarDataListScreen extends StatefulWidget {
+  const SugarDataListScreen({super.key});
+
   @override
   State<SugarDataListScreen> createState() => _SugarDataListScreenState();
 }
@@ -23,6 +27,9 @@ class _SugarDataListScreenState extends State<SugarDataListScreen> {
   @override
   void initState() {
     super.initState();
+
+    print('Selected Unit IN LIST :${sl<SugarDataProvider>().selectedUnit}');
+
     sugarDataProvider.getSugarDataList();
   }
 
@@ -39,15 +46,12 @@ class _SugarDataListScreenState extends State<SugarDataListScreen> {
           scrolledUnderElevation: 0,
           title: Text(
             'Gluco Mate',
-            style: montserratStyle(
-              fontSize: 22.sp,
-              fontWeight: FontWeight.bold,
-            ),
+            style: appBarTextStyle,
           ),
           actions: [
             InkWell(
               onTap: () {
-                Navigator.of(context).push(
+                navigatorKey.currentState?.push(
                   MaterialPageRoute(
                     builder: (context) => AddSugarDataScreen(
                       isEditSugarData: false,
@@ -68,43 +72,7 @@ class _SugarDataListScreenState extends State<SugarDataListScreen> {
           elevation: 0,
           titleSpacing: 0,
         ),
-        // drawer: Drawer(
-        //   backgroundColor: whiteColor,
-        //   shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
-        //   child: ListView(
-        //     padding: EdgeInsets.zero,
-        //     children: [
-        //       DrawerHeader(
-        //         child: Column(
-        //           crossAxisAlignment: CrossAxisAlignment.start,
-        //           mainAxisAlignment: MainAxisAlignment.end,
-        //           children: [
-        //             Text(
-        //               "Gluco Mate",
-        //               style: montserratStyle(
-        //                 fontSize: 34.sp,
-        //                 fontWeight: FontWeight.bold,
-        //               ),
-        //             ),
-        //           ],
-        //         ),
-        //       ),
-        //       ListTile(
-        //         leading: const Icon(Icons.file_copy),
-        //         title: Text(
-        //           'Reports',
-        //           style: montserratStyle(
-        //             fontSize: 14.sp,
-        //             fontWeight: FontWeight.w500,
-        //           ),
-        //         ),
-        //         onTap: () {
-        //           Navigator.pop(context); // Close Drawer
-        //         },
-        //       ),
-        //     ],
-        //   ),
-        // ),
+        drawer: DrawerWidget(),
         body: Consumer<SugarDataProvider>(
           builder: (context, sugarDataProvider, child) {
             return Column(
@@ -125,9 +93,9 @@ class _SugarDataListScreenState extends State<SugarDataListScreen> {
                         ),
                       )
                     : Expanded(
-                      child: Padding(
-                          padding:
-                              EdgeInsets.symmetric(horizontal: 4.w, vertical: 2.h),
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 4.w, vertical: 2.h),
                           child: ListView.builder(
                             itemCount: sugarDataProvider.sugarDataList.length,
                             itemBuilder: (context, index) {
@@ -136,7 +104,7 @@ class _SugarDataListScreenState extends State<SugarDataListScreen> {
                               return _sugarDataCard(
                                 sugarData,
                                 () {
-                                  Navigator.of(context).push(
+                                  navigatorKey.currentState?.push(
                                     MaterialPageRoute(
                                       builder: (context) => AddSugarDataScreen(
                                         isEditSugarData: true,
@@ -149,7 +117,7 @@ class _SugarDataListScreenState extends State<SugarDataListScreen> {
                             },
                           ),
                         ),
-                    )
+                      )
               ],
             );
           },
@@ -190,18 +158,24 @@ class _SugarDataListScreenState extends State<SugarDataListScreen> {
                           fontSize: 22.sp,
                           fontWeight: FontWeight.bold,
                           //color: Colors.blueAccent,
-                          color:
-                              getSugarLevelColor(sugarData.sugarValue ?? 0.0),
+                          color: getSugarLevelColor(
+                            sugarValue: sugarData.sugarValue ?? 0.0,
+                            unit: sugarDataProvider.selectedUnit ?? '',
+                          ),
                         ),
                       ),
                       Text(
-                        ' mg/dL',
+                        sugarDataProvider.selectedUnit == 'Unit.mgdl'
+                            ? ' mg/dL'
+                            : ' mmolL',
                         style: montserratStyle(
                           fontSize: 15.sp,
                           fontWeight: FontWeight.bold,
                           //color: Colors.blueAccent,
-                          color:
-                              getSugarLevelColor(sugarData.sugarValue ?? 0.0),
+                          color: getSugarLevelColor(
+                            sugarValue: sugarData.sugarValue ?? 0.0,
+                            unit: sugarDataProvider.selectedUnit ?? '',
+                          ),
                         ),
                       ),
                     ],
@@ -213,7 +187,9 @@ class _SugarDataListScreenState extends State<SugarDataListScreen> {
                         color: Colors.blueAccent.withOpacity(0.1),
                         borderRadius: BorderRadius.circular(4.r),
                         border: Border.all(
-                            color: Colors.grey.shade400, width: 0.3.w)),
+                          color: Colors.grey.shade400,
+                          width: 0.3.w,
+                        )),
                     child: Text(
                       sugarData.measured ?? 'Unknown',
                       style: montserratStyle(

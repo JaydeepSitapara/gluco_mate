@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:gluco_mate/main.dart';
 import 'package:gluco_mate/models/suger_data_model.dart';
 import 'package:gluco_mate/providers/sugar_data_provider.dart';
 import 'package:gluco_mate/ui/sugardata/sugar_data_list_screen.dart';
 import 'package:gluco_mate/ui/theme/colors.dart';
-import 'package:gluco_mate/utils/injector.dart';
+import 'package:gluco_mate/config/injector.dart';
 import 'package:gluco_mate/ui/theme/style.dart';
 import 'package:gluco_mate/ui/widgets/common_text_form_field.dart';
 import 'package:gluco_mate/ui/widgets/condition_selection_drop_down.dart';
 import 'package:gluco_mate/ui/widgets/custom_save_button.dart';
 import 'package:gluco_mate/ui/widgets/date_picker.dart';
 import 'package:gluco_mate/ui/widgets/time_picker.dart';
+import 'package:gluco_mate/utils/services/shared_preference_service.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -33,6 +35,9 @@ class _AddSugarDataScreenState extends State<AddSugarDataScreen> {
   @override
   void initState() {
     super.initState();
+
+    print('Selected Unit :${sl<SugarDataProvider>().selectedUnit}');
+
     if (widget.isEditSugarData ?? false) {
       print('SugarData Id: ${widget.sugarData?.id}');
 
@@ -67,10 +72,9 @@ class _AddSugarDataScreenState extends State<AddSugarDataScreen> {
                 icon: Icon(
                   Icons.close,
                   size: 28.h,
-
                 ),
                 onPressed: () => {
-                      Navigator.pop(context),
+                      navigatorKey.currentState?.pop(context),
                       sugarDataProvider.sugarLevelController.clear(),
                       sugarDataProvider.notesController.clear(),
                       sugarDataProvider.selectedCondition =
@@ -88,16 +92,16 @@ class _AddSugarDataScreenState extends State<AddSugarDataScreen> {
                                 .deleteSugarData(widget.sugarData?.id ?? 0);
 
                             if (response > 0) {
-                              Navigator.of(context).push(
+                              navigatorKey.currentState?.push(
                                 MaterialPageRoute(
-                                  builder: (context) => SugarDataListScreen(),
+                                  builder: (context) =>
+                                      const SugarDataListScreen(),
                                 ),
                               );
                             }
                           },
                           child: Icon(
                             Icons.delete_forever_outlined,
-
                             size: 24.h,
                           )),
                     )
@@ -105,10 +109,7 @@ class _AddSugarDataScreenState extends State<AddSugarDataScreen> {
             ],
             title: Text(
               widget.isEditSugarData ?? false ? 'Update Record' : 'New Record',
-              style: montserratStyle(
-                fontSize: 18.sp,
-                fontWeight: FontWeight.w600,
-              ),
+              style: appBarTextStyle,
             ),
             elevation: 1,
           ),
@@ -144,9 +145,10 @@ class _AddSugarDataScreenState extends State<AddSugarDataScreen> {
                         CustomDropDown(),
                         SizedBox(height: 10.h),
                         CommonTextFormField(
-                          controller: sugarDataProvider.sugarLevelController,
+                          controller:
+                          sugarDataProvider.sugarLevelController,
                           labelText: 'Sugar Concentration',
-                          hintText: 'mg/dL',
+                          hintText: sugarDataProvider.selectedUnit  == 'Unit.mgdl' ? 'mg/dL' : 'mmolL',
                           keyboardType: TextInputType.number,
                         ),
                         SizedBox(height: 10.h),
@@ -187,9 +189,10 @@ class _AddSugarDataScreenState extends State<AddSugarDataScreen> {
                                 .updateSugarData(widget.sugarData?.id ?? 0);
 
                             if (res > 0) {
-                              Navigator.of(context).push(
+                              navigatorKey.currentState?.push(
                                 MaterialPageRoute(
-                                  builder: (context) => SugarDataListScreen(),
+                                  builder: (context) =>
+                                      const SugarDataListScreen(),
                                 ),
                               );
                             }
@@ -197,9 +200,10 @@ class _AddSugarDataScreenState extends State<AddSugarDataScreen> {
                             final res = await sugarDataProvider.addSugarData();
 
                             if (res > 0) {
-                              Navigator.of(context).push(
+                              navigatorKey.currentState?.push(
                                 MaterialPageRoute(
-                                  builder: (context) => SugarDataListScreen(),
+                                  builder: (context) =>
+                                      const SugarDataListScreen(),
                                 ),
                               );
                             }

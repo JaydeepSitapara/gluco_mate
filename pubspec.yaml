@@ -52,8 +52,8 @@ dev_dependencies:
   sqflite: ^2.4.1 #for local-database
   path: ^1.9.0 #provides common operations for manipulating paths: joining, splitting, normalizing, etc
   path_provider: ^2.1.5 #used for locations on the filesystem
-  flutter_phoenix: ^1.1.1 #Easily restart your application from scratch, losing any previous state
-  get_it: ^8.0.3
+  get_it: ^8.0.3 #Simple direct Service Locator that allows to decouple the interface from a concrete implementation and to access the concrete implementation from everywhere in your App
+  shared_preferences: ^2.5.2 #used for storing key-value pairs on disk
 
 
 # For information on the generic Dart part of this file, see the

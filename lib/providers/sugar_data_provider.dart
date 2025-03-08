@@ -3,12 +3,15 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:gluco_mate/models/suger_data_model.dart';
 import 'package:gluco_mate/ui/widgets/dropdown_text_widget.dart';
-import 'package:gluco_mate/utils/database/local_db_provider.dart';
-import 'package:gluco_mate/utils/injector.dart';
+import 'package:gluco_mate/config/injector.dart';
 import 'package:gluco_mate/ui/widgets/show_toast.dart';
+import 'package:gluco_mate/utils/database/local_db_provider.dart';
+import 'package:gluco_mate/utils/services/shared_preference_service.dart';
 import 'package:intl/intl.dart';
 
 class SugarDataProvider extends ChangeNotifier {
+  final localDbProvider = sl<LocalDbProvider>();
+
   //for filter date range
   DateTime? _startDate;
   DateTime? _endDate;
@@ -101,13 +104,22 @@ class SugarDataProvider extends ChangeNotifier {
 
   Future<int> addSugarData() async {
     try {
+      final selectedUnit = await sl<SharedPreferenceService>()
+              .getString(SharedPreferenceKeys.unit) ??
+          '';
+
       final num? sugarLevel = num.tryParse(_sugarLevelController.text);
       if (sugarLevel == null) {
         showSnackbar('Please enter sugar concentration.');
-      } else if (sugarLevel < 50) {
-        showSnackbar('Too low! Please check your value');
-      } else if (sugarLevel > 500) {
-        showSnackbar('Too high! Consult a doctor');
+      } else if (selectedUnit == '${Unit.mmolL}' && sugarLevel < 2.8) {
+        showSnackbar('Tow Low!');
+      } else if (selectedUnit == '${Unit.mmolL}' && sugarLevel > 27.8) {
+        showSnackbar('Tow High!');
+      } else if (selectedUnit == '${Unit.mgdl}' && sugarLevel < 50) {
+        //mgdl validation
+        showSnackbar('Too low!');
+      } else if (selectedUnit == '${Unit.mgdl}' && sugarLevel > 500) {
+        showSnackbar('Too high!');
       } else if (selectedDate == null) {
         showSnackbar('Please select Date.');
       } else if (selectedTime == null) {
@@ -132,7 +144,7 @@ class SugarDataProvider extends ChangeNotifier {
               .toIso8601String(),
         );
 
-        final response = await sl<LocalDbProvider>().addSugarData(sugarData);
+        final response = await localDbProvider.addSugarData(sugarData);
 
         showSnackbar('Sugar Data Added.');
 
@@ -179,7 +191,7 @@ class SugarDataProvider extends ChangeNotifier {
         );
 
         final response =
-            await sl<LocalDbProvider>().updateSugarData(sugarData, sugarDataId);
+            await localDbProvider.updateSugarData(sugarData, sugarDataId);
 
         if (response > 0) {
           showSnackbar('Sugar Data Updated.');
@@ -202,8 +214,7 @@ class SugarDataProvider extends ChangeNotifier {
 
   Future<int> deleteSugarData(int sugarDataId) async {
     try {
-      int deletedRows =
-          await sl<LocalDbProvider>().deleteSugarData(sugarDataId);
+      int deletedRows = await localDbProvider.deleteSugarData(sugarDataId);
       if (deletedRows > 0) {
         showSnackbar('Record deleted successfully.');
         print('Record deleted successfully');
@@ -220,7 +231,7 @@ class SugarDataProvider extends ChangeNotifier {
 
   Future<void> getSugarDataList({String? startDate, String? endDate}) async {
     try {
-      final list = await sl<LocalDbProvider>().getListSugarData(
+      final list = await localDbProvider.getListSugarData(
         startDate: startDate,
         endDate: endDate,
       );
@@ -236,5 +247,14 @@ class SugarDataProvider extends ChangeNotifier {
     } catch (e) {
       print('Error in get sugarData list: ${e.toString()}');
     }
+  }
+
+  String? _selectedUnit = '${Unit.mgdl}';
+
+  String? get selectedUnit => _selectedUnit;
+
+  set selectedUnit(String? value) {
+    _selectedUnit = value;
+    notifyListeners();
   }
 }

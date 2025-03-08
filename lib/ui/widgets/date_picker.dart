@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gluco_mate/providers/sugar_data_provider.dart';
 import 'package:gluco_mate/ui/theme/style.dart';
-import 'package:gluco_mate/utils/injector.dart';
+import 'package:gluco_mate/config/injector.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
