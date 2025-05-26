@@ -4,25 +4,23 @@ import 'package:gluco_mate/screens/sugerdata/add_suger_data_screen.dart';
 import 'package:provider/provider.dart';
 
 void main() {
-
-  //runApp(const MyApp());
   runApp(
-      MultiProvider(
-        providers: [
-          Provider<PatientDataProvider>(create: (_) => PatientDataProvider()),
-        ],
-        child: const MyApp(),
-      ),
+    MultiProvider(
+      providers: [
+        Provider<PatientDataProvider>(create: (_) => PatientDataProvider()),
+      ],
+      child: const MyApp(),
+    ),
   );
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Gluco-Mate',
-    
       theme: ThemeData(
         // fontFamily: 'Montserrat',
         colorScheme: ColorScheme.fromSeed(
